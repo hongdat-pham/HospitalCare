@@ -1,6 +1,6 @@
 # HospitalCare
 
-🇻🇳 Vietnamese Version: [README.vi.md]()
+🇻🇳 Vietnamese Version: [README.vi.md](https://github.com/hongdat-pham/HospitalCare/blob/main/README.vi.md)
 
 ## Overview
 
