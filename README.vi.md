@@ -1,6 +1,6 @@
 # 🏥 HospitalCare
 
-🇺🇸 English Version: [README.md]()
+🇺🇸 English Version: [README.md](https://github.com/hongdat-pham/HospitalCare/blob/main/README.md)
 
 ## Giới thiệu
 
