@@ -1,0 +1,266 @@
+patients [icon: user, color: blue] {
+  id uuid pk
+  patient_code string
+  full_name string
+  date_of_birth date
+  gender string
+  phone string
+  cccd string
+  insurance_number string
+  insurance_type string
+  address string
+}
+
+patient_visits [icon: file-text, color: blue] {
+  id uuid pk
+  patient_id uuid fk
+  doctor_id uuid fk
+  department_id uuid fk
+  status string
+  chief_complaint string
+  symptoms string
+  physical_exam string
+  diagnosis_note string
+  visited_at timestamp
+  ended_at timestamp
+}
+
+vital_signs [icon: activity, color: blue] {
+  id uuid pk
+  visit_id uuid fk
+  heart_rate float
+  blood_pressure_sys float
+  blood_pressure_dia float
+  temperature float
+  respiratory_rate float
+  weight float
+  height float
+  spo2 float
+}
+
+appointments [icon: calendar, color: blue] {
+  id uuid pk
+  patient_id uuid fk
+  department_id uuid fk
+  doctor_id uuid fk
+  scheduled_at timestamp
+  status string
+  notes string
+}
+
+queue_tickets [icon: hash, color: blue] {
+  id uuid pk
+  patient_id uuid fk
+  department_id uuid fk
+  ticket_number int
+  status string
+  issued_date date
+  called_at timestamp
+}
+
+users [icon: user-check, color: purple] {
+  id uuid pk
+  username string
+  password_hash string
+  full_name string
+  role string
+  department_id uuid fk
+  is_active boolean
+}
+
+departments [icon: home, color: purple] {
+  id uuid pk
+  name string
+  type string
+  description string
+}
+
+lab_services [icon: cpu, color: orange] {
+  id uuid pk
+  name string
+  service_type string
+  department_id uuid fk
+  price decimal
+  is_active boolean
+}
+
+lab_orders [icon: clipboard, color: orange] {
+  id uuid pk
+  visit_id uuid fk
+  doctor_id uuid fk
+  service_id uuid fk
+  status string
+  notes string
+  ordered_at timestamp
+}
+
+lab_results [icon: bar-chart-2, color: orange] {
+  id uuid pk
+  order_id uuid fk
+  approved_by uuid fk
+  result_text text
+  image_path string
+  unit string
+  reference_range string
+  approved_at timestamp
+}
+
+icd10_codes [icon: book, color: orange] {
+  id uuid pk
+  code string
+  description_vi string
+  description_en string
+  category string
+}
+
+visit_diagnoses [icon: tag, color: orange] {
+  id uuid pk
+  visit_id uuid fk
+  icd10_id uuid fk
+  diagnosis_type string
+}
+
+medications [icon: package, color: green] {
+  id uuid pk
+  brand_name string
+  active_ingredient string
+  dosage_form string
+  strength string
+  route string
+  byt_code string
+  is_active boolean
+}
+
+prescriptions [icon: file, color: green] {
+  id uuid pk
+  visit_id uuid fk
+  doctor_id uuid fk
+  status string
+  created_at timestamp
+}
+
+prescription_items [icon: list, color: green] {
+  id uuid pk
+  prescription_id uuid fk
+  medication_id uuid fk
+  dosage string
+  frequency string
+  duration_days int
+  quantity int
+  notes string
+}
+
+drug_batches [icon: box, color: green] {
+  id uuid pk
+  medication_id uuid fk
+  batch_number string
+  expiry_date date
+  quantity int
+  quantity_reserved int
+  unit_price decimal
+}
+
+dispense_history [icon: arrow-right-circle, color: green] {
+  id uuid pk
+  batch_id uuid fk
+  prescription_item_id uuid fk
+  dispensed_by uuid fk
+  quantity_dispensed int
+  dispensed_at timestamp
+}
+
+invoices [icon: dollar-sign, color: red] {
+  id uuid pk
+  visit_id uuid fk
+  patient_id uuid fk
+  total_amount decimal
+  insurance_covered decimal
+  patient_pays decimal
+  prepaid_amount decimal
+  status string
+  created_at timestamp
+}
+
+invoice_items [icon: align-justify, color: red] {
+  id uuid pk
+  invoice_id uuid fk
+  item_type string
+  ref_id uuid
+  description string
+  unit_price decimal
+  quantity int
+  subtotal decimal
+}
+
+payments [icon: credit-card, color: red] {
+  id uuid pk
+  invoice_id uuid fk
+  cashier_id uuid fk
+  amount decimal
+  method string
+  reference_code string
+  paid_at timestamp
+}
+
+beds [icon: minus-square, color: yellow] {
+  id uuid pk
+  department_id uuid fk
+  bed_code string
+  room_code string
+  status string
+}
+
+admissions [icon: log-in, color: yellow] {
+  id uuid pk
+  patient_id uuid fk
+  bed_id uuid fk
+  doctor_id uuid fk
+  department_id uuid fk
+  admitted_at timestamp
+  discharged_at timestamp
+  status string
+  notes string
+}
+
+patients.id < patient_visits.patient_id
+patients.id < appointments.patient_id
+patients.id < queue_tickets.patient_id
+patients.id < invoices.patient_id
+patients.id < admissions.patient_id
+
+departments.id < appointments.department_id
+departments.id < queue_tickets.department_id
+departments.id < lab_services.department_id
+departments.id < users.department_id
+departments.id < beds.department_id
+
+users.id < patient_visits.doctor_id
+users.id < lab_orders.doctor_id
+users.id < prescriptions.doctor_id
+users.id < lab_results.approved_by
+users.id < dispense_history.dispensed_by
+users.id < payments.cashier_id
+users.id < admissions.doctor_id
+users.id < appointments.doctor_id
+
+patient_visits.id < vital_signs.visit_id
+patient_visits.id < lab_orders.visit_id
+patient_visits.id < prescriptions.visit_id
+patient_visits.id < visit_diagnoses.visit_id
+patient_visits.id < invoices.visit_id
+
+icd10_codes.id < visit_diagnoses.icd10_id
+
+lab_services.id < lab_orders.service_id
+lab_orders.id < lab_results.order_id
+
+prescriptions.id < prescription_items.prescription_id
+medications.id < prescription_items.medication_id
+medications.id < drug_batches.medication_id
+drug_batches.id < dispense_history.batch_id
+prescription_items.id < dispense_history.prescription_item_id
+
+invoices.id < invoice_items.invoice_id
+invoices.id < payments.invoice_id
+
+beds.id < admissions.bed_id
