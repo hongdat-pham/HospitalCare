@@ -60,7 +60,7 @@ This project is being developed as a graduation project with a focus on healthca
 
 | Role                  | Description                                       |
 | --------------------- | ------------------------------------------------- |
-| Administrator         | System administration and user management         |
+| Manager               | System configuration and reporting                |
 | Receptionist          | Patient registration and appointment management   |
 | Doctor                | Clinical examination, diagnosis, and prescription |
 | Laboratory Technician | Laboratory test processing and result submission  |
@@ -92,7 +92,7 @@ This project is being developed as a graduation project with a focus on healthca
 
 ### Deployment
 
-- Railway / Render (Backend)
+- Railway (Backend)
 - Vercel (Frontend)
 
 ---
@@ -103,6 +103,10 @@ This project is being developed as a graduation project with a focus on healthca
 hospitalcare/
 │
 ├── docs/
+│   ├── ERD/
+│   ├── SDD/
+│   ├── SRS/
+│   └── PROJECT_TIMELINE.docx
 ├── backend/
 ├── frontend/
 ├── README.md

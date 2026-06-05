@@ -60,7 +60,7 @@ Dự án được phát triển trong khuôn khổ đồ án tốt nghiệp vớ
 
 | Vai trò       | Mô tả                                    |
 | ------------- | ---------------------------------------- |
-| Quản trị viên | Quản lý hệ thống và tài khoản            |
+| Quản lý       | Cấu hình hệ thống và xem báo cáo         |
 | Lễ tân        | Tiếp nhận bệnh nhân và quản lý lịch khám |
 | Bác sĩ        | Khám bệnh, chẩn đoán và kê đơn           |
 | Kỹ thuật viên | Thực hiện và trả kết quả cận lâm sàng    |
@@ -92,7 +92,7 @@ Dự án được phát triển trong khuôn khổ đồ án tốt nghiệp vớ
 
 ### Triển khai
 
-- Railway / Render (Backend)
+- Railway (Backend)
 - Vercel (Frontend)
 
 ---
@@ -103,6 +103,10 @@ Dự án được phát triển trong khuôn khổ đồ án tốt nghiệp vớ
 hospitalcare/
 │
 ├── docs/
+│   ├── ERD/
+│   ├── SDD/
+│   ├── SRS/
+│   └── PROJECT_TIMELINE.docx
 ├── backend/
 ├── frontend/
 ├── README.md
