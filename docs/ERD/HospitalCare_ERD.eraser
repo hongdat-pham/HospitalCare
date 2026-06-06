@@ -9,6 +9,7 @@ patients [icon: user, color: blue] {
   insurance_number string
   insurance_type string
   address string
+  created_at timestamp
 }
 
 patient_visits [icon: file-text, color: blue] {
@@ -36,6 +37,7 @@ vital_signs [icon: activity, color: blue] {
   weight float
   height float
   spo2 float
+  recorded_at timestamp
 }
 
 appointments [icon: calendar, color: blue] {
