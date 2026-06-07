@@ -40,23 +40,30 @@ vital_signs [icon: activity, color: blue] {
   recorded_at timestamp
 }
 
+# status enum: pending | confirmed | cancelled | completed | no_show
+# visit_id: nullable — linked after the appointment becomes an actual visit
 appointments [icon: calendar, color: blue] {
   id uuid pk
   patient_id uuid fk
   department_id uuid fk
   doctor_id uuid fk
+  visit_id uuid fk
   scheduled_at timestamp
   status string
   notes string
 }
 
+# status enum: waiting | called | in_progress | done | skipped
+# appointment_id: nullable — null for walk-in patients
+# issued_at: replaces issued_date, stores exact timestamp for wait-time reporting
 queue_tickets [icon: hash, color: blue] {
   id uuid pk
   patient_id uuid fk
   department_id uuid fk
+  appointment_id uuid fk
   ticket_number int
   status string
-  issued_date date
+  issued_at timestamp
   called_at timestamp
 }
 
@@ -70,6 +77,7 @@ users [icon: user-check, color: purple] {
   is_active boolean
 }
 
+# type enum: clinical | paraclinical | pharmacy | admin
 departments [icon: home, color: purple] {
   id uuid pk
   name string
@@ -250,6 +258,9 @@ patient_visits.id < lab_orders.visit_id
 patient_visits.id < prescriptions.visit_id
 patient_visits.id < visit_diagnoses.visit_id
 patient_visits.id < invoices.visit_id
+patient_visits.id < appointments.visit_id
+
+appointments.id < queue_tickets.appointment_id
 
 icd10_codes.id < visit_diagnoses.icd10_id
 
