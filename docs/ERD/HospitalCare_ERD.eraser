@@ -112,6 +112,7 @@ lab_results [icon: bar-chart-2, color: orange] {
   image_path string
   unit string
   reference_range string
+  recorded_at timestamp
   approved_at timestamp
 }
 
