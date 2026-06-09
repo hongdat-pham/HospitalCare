@@ -94,6 +94,7 @@ lab_services [icon: cpu, color: orange] {
   is_active boolean
 }
 
+# status enum: ordered | received | in_progress | approved
 lab_orders [icon: clipboard, color: orange] {
   id uuid pk
   visit_id uuid fk
@@ -137,11 +138,13 @@ medications [icon: package, color: green] {
   active_ingredient string
   dosage_form string
   strength string
+  unit string
   route string
   byt_code string
   is_active boolean
 }
 
+# status enum: pending | dispensed | cancelled
 prescriptions [icon: file, color: green] {
   id uuid pk
   visit_id uuid fk
@@ -169,10 +172,12 @@ drug_batches [icon: box, color: green] {
   quantity int
   quantity_reserved int
   unit_price decimal
+  received_at timestamp
 }
 
 dispense_history [icon: arrow-right-circle, color: green] {
   id uuid pk
+  prescription_id uuid fk
   batch_id uuid fk
   prescription_item_id uuid fk
   dispensed_by uuid fk
@@ -269,6 +274,7 @@ lab_services.id < lab_orders.service_id
 lab_orders.id < lab_results.order_id
 
 prescriptions.id < prescription_items.prescription_id
+prescriptions.id < dispense_history.prescription_id
 medications.id < prescription_items.medication_id
 medications.id < drug_batches.medication_id
 drug_batches.id < dispense_history.batch_id
