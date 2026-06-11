@@ -55,7 +55,7 @@ appointments [icon: calendar, color: blue] {
 
 # status enum: waiting | called | in_progress | done | skipped
 # appointment_id: nullable — null for walk-in patients
-# issued_at: replaces issued_date, stores exact timestamp for wait-time reporting
+# issued_at: stores exact timestamp for wait-time reporting
 queue_tickets [icon: hash, color: blue] {
   id uuid pk
   patient_id uuid fk
@@ -67,6 +67,7 @@ queue_tickets [icon: hash, color: blue] {
   called_at timestamp
 }
 
+# role enum: receptionist | doctor | lab_technician | pharmacist | cashier | manager
 users [icon: user-check, color: purple] {
   id uuid pk
   username string
@@ -75,7 +76,6 @@ users [icon: user-check, color: purple] {
   role string
   department_id uuid fk
   is_active boolean
-  created_at timestamp
 }
 
 # type enum: clinical | paraclinical | pharmacy | admin
@@ -133,6 +133,7 @@ visit_diagnoses [icon: tag, color: orange] {
   diagnosis_type string
 }
 
+# unit: dispense/dosage unit (e.g. viên, chai, ống) — distinct from dosage_form
 medications [icon: package, color: green] {
   id uuid pk
   brand_name string
@@ -173,9 +174,10 @@ drug_batches [icon: box, color: green] {
   quantity int
   quantity_reserved int
   unit_price decimal
-  received_at timestamp
 }
 
+# prescription_id: direct FK for efficient dispense lookup without joining prescription_items
+# quantity_reserved release on prescription cancellation handled at service layer
 dispense_history [icon: arrow-right-circle, color: green] {
   id uuid pk
   prescription_id uuid fk
@@ -186,7 +188,7 @@ dispense_history [icon: arrow-right-circle, color: green] {
   dispensed_at timestamp
 }
 
-# status enum: draft | confirmed | paid | cancelled
+# status enum: draft | pending | paid | cancelled
 invoices [icon: dollar-sign, color: red] {
   id uuid pk
   visit_id uuid fk
@@ -200,7 +202,10 @@ invoices [icon: dollar-sign, color: red] {
 }
 
 # item_type enum: exam_fee | lab_service | medication
-# ref_id: polymorphic FK — references lab_orders.id or prescription_items.id depending on item_type
+# ref_id: polymorphic reference — no FK constraint
+#   exam_fee     → patient_visits.id
+#   lab_service  → lab_orders.id
+#   medication   → prescription_items.id
 invoice_items [icon: align-justify, color: red] {
   id uuid pk
   invoice_id uuid fk
@@ -212,7 +217,6 @@ invoice_items [icon: align-justify, color: red] {
   subtotal decimal
 }
 
-# method enum: cash | bank_transfer
 payments [icon: credit-card, color: red] {
   id uuid pk
   invoice_id uuid fk
@@ -223,6 +227,7 @@ payments [icon: credit-card, color: red] {
   paid_at timestamp
 }
 
+# status enum: available | occupied | maintenance
 beds [icon: minus-square, color: yellow] {
   id uuid pk
   department_id uuid fk
@@ -231,6 +236,7 @@ beds [icon: minus-square, color: yellow] {
   status string
 }
 
+# status enum: active | discharged | transferred
 admissions [icon: log-in, color: yellow] {
   id uuid pk
   patient_id uuid fk
@@ -249,11 +255,13 @@ patients.id < queue_tickets.patient_id
 patients.id < invoices.patient_id
 patients.id < admissions.patient_id
 
+departments.id < patient_visits.department_id
 departments.id < appointments.department_id
 departments.id < queue_tickets.department_id
 departments.id < lab_services.department_id
 departments.id < users.department_id
 departments.id < beds.department_id
+departments.id < admissions.department_id
 
 users.id < patient_visits.doctor_id
 users.id < lab_orders.doctor_id
