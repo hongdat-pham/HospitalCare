@@ -44,7 +44,6 @@ export async function seedUsers(dataSource: DataSource) {
     },
   ];
 
-  // Insert từng user một — mỗi query có đúng params của user đó
   for (const user of users) {
     await dataSource.query(
       `INSERT INTO users (id, username, password_hash, full_name, role, is_active)
